@@ -2,11 +2,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def get_user_input():
-    expr = input("Введите функцию от x (пример: x**2): ")
-    a = float(input("Введите левую границу интегрирования (a): "))
-    b = float(input("Введите правую границу интегрирования (b): "))
-    n = int(input("Введите количество шагов (n): "))
-    return expr, a, b, n
+    while True:
+        try:
+            expr = input("Введите функцию от x (пример: x**2): ")
+            a = float(input("Введите левую границу интегрирования (a): "))
+            b = float(input("Введите правую границу интегрирования (b): "))
+            n = int(input("Введите количество шагов (n): "))
+            
+            if n <= 0:
+                raise ValueError("Количество шагов должно быть положительным числом.")
+        
+            return expr, a, b, n
+        except ValueError as e:
+            print(f"Ошибка ввода: {e}")
+            continue
 
 def f(x, expr):
     from numpy import sqrt, sin, cos, exp, log
