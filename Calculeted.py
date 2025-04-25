@@ -9,7 +9,12 @@ def get_user_input():
     return expr, a, b, n
 
 def f(x, expr):
-    return eval(expr)
+    from numpy import sqrt, sin, cos, exp, log
+    context = {"x": x, "sqrt": sqrt, "sin": sin, "cos": cos, "exp": exp, "log": log}
+    try:
+        return eval(expr, {"__builtins__": None}, context)
+    except Exception as e:
+        raise ValueError(f"Ошибка при вычислении: {e}")
 
 def integrate(expr, a, b, n):
     x = np.linspace(a, b, n + 1)     
@@ -18,7 +23,7 @@ def integrate(expr, a, b, n):
     area = (y[0] + 2 * sum(y[1:-1]) + y[-1]) * h / 2
     return area, x, y
 
-def plot_function(x, y, expr, a, b, area):
+def plot_function(x, y, expr, a, b, area, n):
     plt.figure(figsize=(10, 6))
     
     x_smooth = np.linspace(a, b, 500)
@@ -32,7 +37,7 @@ def plot_function(x, y, expr, a, b, area):
         ys = [0, y[i], y[i+1], 0]
         plt.fill(xs, ys, 'orange', alpha=0.3, edgecolor='black')
 
-    plt.title(f"Интеграл от {a} до {b} ≈ {area:.5f}")
+    plt.title(f"Интеграл от {a} до {b} ≈ {area:.5f} с n = {n}")
     plt.xlabel("x")
     plt.ylabel("f(x)")
     plt.grid(True)
@@ -42,11 +47,10 @@ def plot_function(x, y, expr, a, b, area):
 
 def main():
     expr, a, b, n = get_user_input()
-    # print(expr , a ,b,n)
     try:
         area, x, y = integrate(expr, a, b, n)
         print(f"Площадь под графиком: {area:.5f}")
-        plot_function(x, y, expr, a, b, area)
+        plot_function(x, y, expr, a, b, area , n)
     except Exception as e:
         print("Ошибка при вычислении:", e)
 
